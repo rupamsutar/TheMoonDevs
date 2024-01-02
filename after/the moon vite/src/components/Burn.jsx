@@ -2,6 +2,7 @@ import { useState } from "react";
 import AppTokenBurn from "./subComponents/appTokenBurn/AppTokenBurn";
 import TopBar from "./subComponents/topBar/TopBar";
 import SupplyBar from "./subComponents/supplyBar/SupplyBar";
+import SupplyLabel from "./subComponents/supplyLabel/SupplyLabel";
 
 const BurnPageStyled = styled.div``;
 
@@ -43,6 +44,9 @@ export const BurnPage = () => {
   const [approveTxHash, setApproveTxHash] = useState(null);
 
   const [coinData, setCoinData] = useState({});
+
+  const statsSupplies = supplies;
+
   useEffect(() => {
     CoinGeckoApi.fetchCoinData()
       .then((data) => {
@@ -116,18 +120,27 @@ export const BurnPage = () => {
             showToast={showToast}
           />
           <BurnStatsContainer>
-            <TopBar />
-            <SupplyBar />
+            <TopBar
+              openChainModal={openChainModal}
+              walletChain={walletChain}
+              suppliesChain={suppliesChain}
+              isOldToken={isOldToken}
+            />
+            <SupplyBar statsSupplies={statsSupplies} />
             <div className="supply_label_list">
-              <SupplyBar
+              <SupplyLabel
                 supplyLabel={"Burnt App Tokens"}
                 showTotalSupply={true}
                 color={"orange"}
+                walletChain={walletChain}
+                statsSupplies={statsSupplies}
               />
-              <SupplyBar
+              <SupplyLabel
                 supplyLabel={"Circulating App Tokens"}
                 color={"green"}
-                showAllSupplies={true}
+                showAllSupplies={allSupplies}
+                walletChain={walletChain}
+                statsSupplies={statsSupplies}
               />
             </div>
           </BurnStatsContainer>

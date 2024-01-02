@@ -1,9 +1,6 @@
 import React from "react";
 
-export default function SupplyBar() {
-  const { supplies, allSupplies } = useAppSupplies();
-  const statsSupplies = supplies;
-
+export default function SupplyBar({ statsSupplies }) {
   return (
     <div className="supply_bar">
       <AppIcon

@@ -1,12 +1,14 @@
 import React from "react";
 
 export default function SupplyLabel(props) {
-  const { supplyLabel, showTotalSupply, color, showAllSupplies } = props;
-
-  const { walletChain } = useWallet();
-  const { supplies } = useAppSupplies();
-
-  const statsSupplies = supplies;
+  const {
+    supplyLabel,
+    showTotalSupply,
+    color,
+    showAllSupplies,
+    walletChain,
+    statsSupplies,
+  } = props;
 
   return (
     <div>

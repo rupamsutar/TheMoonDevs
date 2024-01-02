@@ -1,9 +1,6 @@
 import React from "react";
 
-export default function TopBar() {
-  const { walletChain, openChainModal } = useWallet();
-  const { suppliesChain } = useAppSupplies();
-
+export default function TopBar({ walletChain, openChainModal, isOldToken }) {
   const tokenAddress = fetchAddressForChain(
     suppliesChain?.id,
     isOldToken ? "oldToken" : "newToken"
