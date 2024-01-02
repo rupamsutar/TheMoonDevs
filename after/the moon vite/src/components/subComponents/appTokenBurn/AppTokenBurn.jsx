@@ -1,6 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
+
+const BurnTxProgress = {
+  default: "Burn App Tokens",
+  burning: "Burning...",
+};
 
 export default function AppTokenBurn() {
+  const { isWalletConnected, openConnectModal, walletChain } = useWallet();
+  const { toastMsg, toastSev, showToast } = useAppToast();
+
+  const [burnAmount, setBurnAmount] = useState("");
+  const [txButton, setTxButton] = useState(BurnTxProgress.default);
+  const [txProgress, setTxProgress] = useState(false);
+  const [burnTxHash, setBurnTxHash] = useState(null);
+
+  const onChangeBurnAmount = (e) => {
+    if (e.target.value == "") setBurnAmount("");
+    if (isNaN(parseFloat(e.target.value))) return;
+    setBurnAmount(e.target.value);
+  };
+
+  const executeBurn = async () => {
+    if (!isWalletConnected) {
+      openConnectModal();
+    }
+    if (burnAmount === "") {
+      console.log("Enter amount to migrate");
+      showToast("Enter amount to migrate", ToastSeverity.warning);
+      return;
+    }
+    const newTokenAddress = fetchAddressForChain(walletChain?.id, "newToken");
+    const oftTokenContract = new Contract(
+      newTokenAddress,
+      oftAbi,
+      ethersSigner
+    );
+    let amount = parseEther(burnAmount);
+    setTxButton(BurnTxProgress.burning);
+    setTxProgress(true);
+    try {
+      const burnTx = await oftTokenContract.burn(amount);
+      setBurnTxHash(burnTx.hash);
+      console.log(burnTx, burnTx.hash);
+      await burnTx.wait();
+      setTxButton(BurnTxProgress.default);
+      setTxProgress(false);
+      refetchTransactions();
+      fetchSupplies();
+    } catch (err) {
+      console.log(err);
+      setTxButton(BurnTxProgress.default);
+      setTxProgress(false);
+      showToast("Burn Failed!", ToastSeverity.error);
+      return;
+    }
+  };
+
   return (
     <div className="info_box filled">
       <h1 className="title">App TOKEN BURN</h1>
