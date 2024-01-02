@@ -5,10 +5,12 @@ const BurnTxProgress = {
   burning: "Burning...",
 };
 
-export default function AppTokenBurn() {
-  const { isWalletConnected, openConnectModal, walletChain } = useWallet();
-  const { toastMsg, toastSev, showToast } = useAppToast();
-
+export default function AppTokenBurn({
+  walletChain,
+  openConnectModal,
+  isWalletConnected,
+  showToast,
+}) {
   const [burnAmount, setBurnAmount] = useState("");
   const [txButton, setTxButton] = useState(BurnTxProgress.default);
   const [txProgress, setTxProgress] = useState(false);
